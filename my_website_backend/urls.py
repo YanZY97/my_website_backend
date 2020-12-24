@@ -21,8 +21,9 @@ from django.views import static
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('tools/', include('apps.tools.urls')),
+    path('admin/', admin.site.urls),                    # 后台管理
+    path('tools/', include('apps.tools.urls')),         # 侧边工具
+    path('user/', include('apps.user.urls')),           # 用户管理
 
     url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}, name='static'),
     url(r'^media/(?P<path>.*)$', static.serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
