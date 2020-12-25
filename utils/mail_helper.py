@@ -12,7 +12,7 @@ def _format_addr(s):
 
 
 def gen_captcha_code_msg(code, from_addr, to_addr):
-    text = '感谢注册！ 您的验证码是：{}，有效期为20分钟。'
+    text = '感谢注册！ 您的验证码是：{}，有效期为10分钟。'
     msg = MIMEText(text.format(code), 'plain', 'utf-8')
     msg['From'] = _format_addr('Y<%s>' % from_addr)
     msg['To'] = _format_addr('<%s>' % to_addr)

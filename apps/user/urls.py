@@ -6,6 +6,8 @@ from . import views
 
 urlpatterns = [
 
-    path('login/', views.MyTokenObtainPairView.as_view()),                  # 登录
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),     # 刷新用户token
+    path('login/', views.MyTokenObtainPairView.as_view()),      # 登录
+    path('send_captcha/', views.SendCaptcha.as_view()),         # 获取验证码
+    path('register/', views.Register.as_view()),                # 注册
+    path('refresh/', TokenRefreshView.as_view()),               # 刷新用户token
 ]

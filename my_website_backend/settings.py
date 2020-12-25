@@ -156,6 +156,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# 邮件设置
+MAIL_FROM_ADDR = '1835752347@qq.com'
+MAIL_PASSWORD = 'yksxrkfmldojdadb'
+MAIL_SMTP_SERVER = 'smtp.qq.com'
+MAIL_EXPIRE = 60*10
+MAIL_INTERVAL = 20
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
