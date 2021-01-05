@@ -39,21 +39,19 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
             return data
         except Exception as e:
-            print(e)
-            return {
-                'message': '用户名或密码错误'
-            }
+            raise e
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     """登录"""
     serializer_class = MyTokenObtainPairSerializer
+    print(serializer_class)
 
 
 class SendCaptcha(APIView):
     """发送验证码"""
     def post(self, request):
-        email = request.POST.get('email')
+        email = request.data.get('email')
         # 校验邮箱格式
         try:
             validate_email(email)
@@ -88,13 +86,13 @@ class SendCaptcha(APIView):
 class Register(APIView):
     """注册"""
     def post(self, request):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        email = request.POST.get('email')
-        mobile = request.POST.get('mobile')
-        birthday = request.POST.get('birthday')
-        website = request.POST.get('website')
-        captcha = request.POST.get('captcha')
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
+        mobile = request.data.get('mobile')
+        birthday = str(request.data.get('birthday')).split('T')[0]
+        website = request.data.get('website')
+        captcha = request.data.get('captcha')
 
         # 校验邮箱格式
         try:
@@ -102,9 +100,9 @@ class Register(APIView):
         except ValidationError:
             return HttpResponse('邮箱格式不正确', status=403)
 
-        # 校验用户名/邮箱/手机是否已存在
+        # 校验用户名/邮箱是否已存在
         try:
-            user = User.objects.get(Q(username=username) | Q(mobile=mobile) | Q(email=email))
+            user = User.objects.get(Q(username=username) | Q(email=email))
         except User.DoesNotExist:
             user = None
         if user:

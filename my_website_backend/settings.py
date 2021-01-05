@@ -161,7 +161,7 @@ MAIL_FROM_ADDR = '1835752347@qq.com'
 MAIL_PASSWORD = 'yksxrkfmldojdadb'
 MAIL_SMTP_SERVER = 'smtp.qq.com'
 MAIL_EXPIRE = 60*10
-MAIL_INTERVAL = 20
+MAIL_INTERVAL = 60
 
 
 # Internationalization
@@ -175,7 +175,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
