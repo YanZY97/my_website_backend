@@ -12,6 +12,7 @@ def _format_addr(s):
 
 
 def gen_captcha_code_msg(code, from_addr, to_addr):
+    """创建邮件"""
     text = '感谢注册！ 您的验证码是：{}，有效期为10分钟。'
     msg = MIMEText(text.format(code), 'plain', 'utf-8')
     msg['From'] = _format_addr('Y<%s>' % from_addr)
@@ -21,15 +22,22 @@ def gen_captcha_code_msg(code, from_addr, to_addr):
 
 
 def send_captcha_code(smtp_server, from_addr, password, to_addr):
+    """发送验证码"""
+    code = gen_captcha_code()
+    msg = gen_captcha_code_msg(code, from_addr, to_addr).as_string()
+
+    send_email(smtp_server, from_addr, password, to_addr, msg)
+    return code
+
+
+def send_email(smtp_server, from_addr, password, to_addr, msg):
+    """发送邮件"""
     server = smtplib.SMTP(smtp_server, 25)
     server.set_debuglevel(1)
 
     server.login(from_addr, password)
-    code = gen_captcha_code()
-    msg = gen_captcha_code_msg(code, from_addr, to_addr)
-    server.sendmail(from_addr, [to_addr], msg.as_string())
+    server.sendmail(from_addr, [to_addr], msg)
     server.quit()
-    return code
 
 
 if __name__ == '__main__':

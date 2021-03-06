@@ -5,6 +5,7 @@ from apps.tools.models import Likes
 
 
 class Like(APIView):
+
     def post(self, request):
         likes_model = Likes.objects.get(id=1)
         likes = likes_model.count

@@ -1,4 +1,9 @@
 import time
+import base64
+import os
+
+import cv2
+import numpy as np
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -45,7 +50,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     """登录"""
     serializer_class = MyTokenObtainPairSerializer
-    print(serializer_class)
 
 
 class SendCaptcha(APIView):
@@ -93,6 +97,17 @@ class Register(APIView):
         birthday = str(request.data.get('birthday')).split('T')[0]
         website = request.data.get('website')
         captcha = request.data.get('captcha')
+        avatar_b64 = request.data.get('avatar').split(',')[1]
+
+        avatar_data = base64.b64decode(avatar_b64)
+        avatar_array = np.fromstring(avatar_data, np.uint8)
+        avatar = cv2.imdecode(avatar_array, cv2.COLOR_RGB2BGR)
+        if not os.path.exists(os.path.join(settings.BASE_DIR, 'media', 'avatars', username)):
+            os.makedirs(os.path.join(settings.BASE_DIR, 'media', 'avatars', username))
+        avatar_url = os.path.join('media', 'avatars', username, 'avatar.png')
+        cv2.imwrite(os.path.join(settings.BASE_DIR, avatar_url), avatar)
+        # cv2.imshow('1', avatar)
+        # cv2.waitKey()
 
         # 校验邮箱格式
         try:
@@ -122,7 +137,14 @@ class Register(APIView):
         else:
             return HttpResponse('该邮箱还没获取验证码', status=403)
 
-        user = User.objects.create_user(username, password, email, mobile, birthday, website)
+        user = User.objects.create_user(username, password, email, mobile, birthday, website, avatar_url)
         user.is_active = 1
         user.save()
         return HttpResponse('注册成功')
+
+
+class UploadAvatar(APIView):
+    """上传头像"""
+    def post(self, request):
+        print(request)
+        return HttpResponse('1')
