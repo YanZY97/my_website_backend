@@ -11,20 +11,25 @@ def _format_addr(s):
     return formataddr((Header(name, 'utf-8').encode(), addr))
 
 
-def gen_captcha_code_msg(code, from_addr, to_addr):
+def gen_captcha_code_msg(code, from_addr, to_addr, hint):
     """创建邮件"""
-    text = '感谢注册！ 您的验证码是：{}，有效期为10分钟。'
+    if hint == 'register':
+        text = '感谢注册！ 您的验证码是：{}，有效期为10分钟。'
+        header = '注册验证码'
+    else:
+        text = '您的验证码是：{}，有效期为10分钟。'
+        header = 'captcha'
     msg = MIMEText(text.format(code), 'plain', 'utf-8')
     msg['From'] = _format_addr('Y<%s>' % from_addr)
     msg['To'] = _format_addr('<%s>' % to_addr)
-    msg['Subject'] = Header('注册验证码', 'utf-8').encode()
+    msg['Subject'] = Header(header, 'utf-8').encode()
     return msg
 
 
-def send_captcha_code(smtp_server, from_addr, password, to_addr):
+def send_captcha_code(smtp_server, from_addr, password, to_addr, hint):
     """发送验证码"""
     code = gen_captcha_code()
-    msg = gen_captcha_code_msg(code, from_addr, to_addr).as_string()
+    msg = gen_captcha_code_msg(code, from_addr, to_addr, hint).as_string()
 
     send_email(smtp_server, from_addr, password, to_addr, msg)
     return code

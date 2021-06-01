@@ -18,6 +18,8 @@ class UserManager(BaseUserManager):
             website = ''
         if not avatar:
             avatar = ''
+        else:
+            avatar = '/api/' + avatar
         user = self.model(username=username,
                           email=email,
                           mobile=mobile,
@@ -33,7 +35,7 @@ class UserManager(BaseUserManager):
         kwargs['is_superuser'] = False
         return self._create_user(username, password, email, mobile, birthday, website, avatar, **kwargs)
 
-    def create_superuser(self, username, password, email, mobile, birthday, website, avatar, **kwargs):
+    def create_superuser(self, username, password, email, mobile=None, birthday=None, website=None, avatar=None, **kwargs):
         kwargs['is_superuser'] = True
         kwargs['is_staff'] = True
         return self._create_user(username, password, email, mobile, birthday, website, avatar, **kwargs)
@@ -44,6 +46,9 @@ class User(AbstractUser):
     birthday = models.CharField(max_length=50)
     website = models.CharField(max_length=200)
     avatar = models.CharField(max_length=100)
+    website_accessable = models.BooleanField(default=False)
+    signature = models.CharField(max_length=500)
+    website_img = models.CharField(max_length=1000)
 
     objects = UserManager()
 

@@ -8,6 +8,7 @@ class Blogs(models.Model):
     cls = models.CharField(max_length=50)
     tags = models.TextField()
     content = models.TextField()
+    abstract = models.TextField()
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
     visits = models.IntegerField(default=0)
