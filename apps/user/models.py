@@ -42,13 +42,13 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    mobile = models.CharField(max_length=15)
-    birthday = models.CharField(max_length=50)
-    website = models.CharField(max_length=200)
-    avatar = models.CharField(max_length=100)
+    mobile = models.TextField()
+    birthday = models.TextField()
+    website = models.TextField()
+    avatar = models.TextField()
     website_accessable = models.BooleanField(default=False)
-    signature = models.CharField(max_length=500)
-    website_img = models.CharField(max_length=1000)
+    signature = models.TextField()
+    website_img = models.TextField()
 
     objects = UserManager()
 

@@ -1,0 +1,8 @@
+Django==3.1.4
+djangorestframework==3.12.2
+opencv-python==4.5.1.48
+numpy==1.19.5
+django-cors-headers==3.6.0
+djangorestframework_simplejwt
+mysqlclient==2.0.2
+pillow==8.1.0
