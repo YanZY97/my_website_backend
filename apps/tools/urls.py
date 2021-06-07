@@ -8,4 +8,5 @@ urlpatterns = [
     path('postannouncement/', views.PostAnnouncement.as_view()),
     path('getannouncement/', views.GetAnnouncement.as_view()),
     path('getannouncementcount/', views.GetAnnouncementCount.as_view()),
+    path('uploadaction/', views.UploadAction.as_view()),
 ]

@@ -3,9 +3,9 @@ from django.db import models
 
 # Create your models here.
 class Blogs(models.Model):
-    author = models.CharField(max_length=100)
-    title = models.CharField(max_length=50)
-    cls = models.CharField(max_length=50)
+    author = models.TextField()
+    title = models.TextField()
+    cls = models.TextField()
     tags = models.TextField()
     content = models.TextField()
     abstract = models.TextField()
@@ -25,7 +25,7 @@ class Blogs(models.Model):
 
 
 class Comments(models.Model):
-    author = models.CharField(max_length=100)
+    author = models.TextField()
     text = models.TextField()
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)

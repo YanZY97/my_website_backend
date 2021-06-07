@@ -20,9 +20,12 @@ class Like(APIView):
 
 class Visit(APIView):
     """浏览网页"""
-    def get(self, request):
+    def post(self, request):
         visits_model = Visits()
         visits_model.save()
+        return HttpResponse()
+
+    def get(self, request):
         visit_count = len(Visits.objects.all())
         return HttpResponse(visit_count)
 
@@ -66,3 +69,10 @@ class GetAnnouncement(APIView):
             })
         return JsonResponse({"data": announcements_list})
 
+
+class UploadAction(APIView):
+    def get(self, request):
+        return HttpResponse(status=200)
+
+    def post(self, request):
+        return HttpResponse(status=200)

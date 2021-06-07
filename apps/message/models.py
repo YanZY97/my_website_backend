@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Messages(models.Model):
-    author = models.CharField(max_length=100)
+    author = models.TextField()
     content = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
 

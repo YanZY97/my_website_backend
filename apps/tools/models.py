@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Likes(models.Model):
-    user = models.CharField(max_length=100)
+    user = models.TextField()
 
     class Meta:
         db_table = 'likes'
@@ -26,8 +26,8 @@ class Visits(models.Model):
 
 
 class Announcement(models.Model):
-    author = models.CharField(max_length=50)
-    text = models.CharField(max_length=500)
+    author = models.TextField()
+    text = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
