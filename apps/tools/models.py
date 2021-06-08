@@ -2,6 +2,9 @@ from django.db import models
 
 
 # Create your models here.
+from apps.user.models import User
+
+
 class Likes(models.Model):
     user = models.TextField()
 
@@ -26,7 +29,7 @@ class Visits(models.Model):
 
 
 class Announcement(models.Model):
-    author = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
 

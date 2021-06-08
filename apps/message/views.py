@@ -2,13 +2,15 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from apps.message.models import Messages
+from apps.user.models import User
 
 
 class PostMessage(APIView):
     """发表留言"""
     def post(self, request):
         message_model = Messages()
-        message_model.author = request.data.get('user')
+        user = User.objects.get(username=request.data.get('user'))
+        message_model.user = user.id
         message_model.content = request.data.get('data')
         message_model.save()
         return JsonResponse({'data': 'succeed'})
@@ -33,9 +35,20 @@ class GetMessage(APIView):
         messages = list(reversed(messages))[start_index:end_index]
         for message in messages:
             time = str(message.time)
+            try:
+                user = User.objects.get(id=message.user)
+                author = user.username
+                avatar = user.avatar
+                signature = user.signature
+            except:
+                author = ''
+                avatar = ''
+                signature = ''
             message_list.append({
                 'id': message.id,
-                'author': message.author,
+                'author': author,
+                'avatar': avatar,
+                'signature': signature,
                 'content': message.content,
                 'time': time[:-7]
             })

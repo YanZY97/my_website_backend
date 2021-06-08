@@ -1,9 +1,9 @@
 from django.db import models
+from apps.user.models import User
 
 
-# Create your models here.
 class Messages(models.Model):
-    author = models.TextField()
+    user = models.IntegerField()
     content = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
 

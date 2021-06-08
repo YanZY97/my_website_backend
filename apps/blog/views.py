@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
 from apps.blog.models import Blogs, Comments
+from apps.user.models import User
 
 
 class PostBlog(APIView):
@@ -11,7 +12,8 @@ class PostBlog(APIView):
 
     def post(self, request):
         blog_model = Blogs()
-        blog_model.author = request.user.username
+        user = User.objects.get(id=request.user.id)
+        blog_model.user = user
         blog_model.title = request.data.get('title')
         blog_model.cls = request.data.get('cls')
         blog_model.tags = request.data.get('tags')
@@ -46,7 +48,8 @@ class GetBlog(APIView):
             time = str(blog.time)
             blog_list.append({
                 'id': blog.id,
-                'author': blog.author,
+                'author': blog.user.username,
+                'avatar': blog.user.avatar,
                 'title': blog.title,
                 'cls': blog.cls,
                 'tags': blog.tags.split(","),
@@ -71,7 +74,8 @@ class GetArticle(APIView):
         time = str(article.time)
         data = {
             'id': article.id,
-            'author': article.author,
+            'author': article.user.username,
+            'avatar': article.user.avatar,
             'title': article.title,
             'cls': article.cls,
             'tags': article.tags.split(","),
@@ -92,11 +96,12 @@ class AddComment(APIView):
         article_id = request.data.get('articleid')
         data = request.data.get('data')
         article = Blogs.objects.get(id=article_id)
+        user = User.objects.get(id=request.user.id)
         comments_num = article.comments_num
         article.comments_num = comments_num + 1
         article.save()
         comment = Comments()
-        comment.author = request.user.username
+        comment.user = user
         comment.likes = 0
         comment.dislikes = 0
         comment.article = article
@@ -116,7 +121,8 @@ class GetComments(APIView):
             time = str(comment.time)
             comment_list.append({
                 'id': comment.id,
-                'author': comment.author,
+                'author': comment.user.username,
+                'avatar': comment.user.avatar,
                 'data': comment.text,
                 'likes': comment.likes,
                 'dislikes': comment.dislikes,

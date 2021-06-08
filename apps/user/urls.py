@@ -21,4 +21,5 @@ urlpatterns = [
     path('resetbirthday/', views.ResetBirthday.as_view()),              # 重置生日
     path('resetwebsite/', views.ResetWebsite.as_view()),                # 重置个人主页
     path('getwebaccess/', views.GetWebAccess.as_view()),                # 获取认证网站的用户列表
+    path('getnameandid/', views.GetNameAndId.as_view()),                # 获取用户名和id
 ]
