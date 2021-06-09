@@ -366,10 +366,12 @@ class UploadAvatar(APIView):
         avatar_data = base64.b64decode(avatar_b64)
         avatar_array = np.fromstring(avatar_data, np.uint8)
         avatar = cv2.imdecode(avatar_array, cv2.COLOR_RGB2BGR)
-        if not os.path.exists(os.path.join(settings.BASE_DIR, 'media', 'avatars', userid)):
-            os.makedirs(os.path.join(settings.BASE_DIR, 'media', 'avatars', userid))
-        avatar_url = os.path.join('media', 'avatars', userid, 'avatar.png')
+        if not os.path.exists(os.path.join(settings.BASE_DIR, 'media', 'avatars', str(userid))):
+            os.makedirs(os.path.join(settings.BASE_DIR, 'media', 'avatars', str(userid)))
+        avatar_url = os.path.join('media', 'avatars', str(userid), 'avatar.png')
         cv2.imwrite(os.path.join(settings.BASE_DIR, avatar_url), avatar)
+        user.avatar = '/api/' + avatar_url
+        user.save()
         return HttpResponse('修改成功')
 
 

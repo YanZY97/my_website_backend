@@ -14,3 +14,16 @@ class Messages(models.Model):
 
     def __str__(self):
         return 'messages'
+
+
+class MessagePictures(models.Model):
+    message = models.ForeignKey(Messages, on_delete=models.CASCADE)
+    url = models.TextField()
+
+    class Meta:
+        db_table = 'message_pictures'
+        verbose_name = 'MessagePictures'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return 'message_pictures'
