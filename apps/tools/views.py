@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
 
 from apps.tools.models import Likes, Visits, Announcement
+from apps.user.models import User
 
 
 class Like(APIView):
@@ -36,7 +37,8 @@ class PostAnnouncement(APIView):
 
     def post(self, request):
         announcement = Announcement()
-        announcement.author = request.user.username
+        user = User.objects.get(id=request.user.id)
+        announcement.user = user
         announcement.text = request.data.get('text')
         announcement.save()
         return HttpResponse('发布成功')
@@ -63,7 +65,7 @@ class GetAnnouncement(APIView):
             time = str(announcement.time)
             announcements_list.append({
                 'id': announcement.id,
-                'author': announcement.author,
+                'author': announcement.user.username,
                 'text': announcement.text,
                 'time': time[:-7]
             })

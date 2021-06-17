@@ -2,8 +2,11 @@ from django.db import models
 
 
 # Create your models here.
+from apps.user.models import User
+
+
 class Blogs(models.Model):
-    author = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.TextField()
     cls = models.TextField()
     tags = models.TextField()
@@ -25,7 +28,7 @@ class Blogs(models.Model):
 
 
 class Comments(models.Model):
-    author = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)

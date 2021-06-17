@@ -1,3 +1,4 @@
 # Project exclude paths
 /venv/
 /media/
+/my_website_backend/config.ini

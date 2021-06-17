@@ -40,6 +40,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             data = super(MyTokenObtainPairSerializer, self).validate(attrs)
             refresh = self.get_token(self.user)
             data['message'] = '登录成功'
+            data['id'] = self.user.id
             data['refresh'] = str(refresh)
             data['access'] = str(refresh.access_token)
             data['username'] = self.user.username
@@ -61,6 +62,7 @@ class MyAdminTokenObtainPairSerializer(TokenObtainPairSerializer):
             if not self.user.is_staff:
                 raise(Exception('非管理员帐号'))
             data['message'] = '登录成功'
+            data['id'] = self.user.id
             data['refresh'] = str(refresh)
             data['access'] = str(refresh.access_token)
             data['username'] = self.user.username
@@ -150,12 +152,6 @@ class Register(APIView):
         avatar_data = base64.b64decode(avatar_b64)
         avatar_array = np.fromstring(avatar_data, np.uint8)
         avatar = cv2.imdecode(avatar_array, cv2.COLOR_RGB2BGR)
-        if not os.path.exists(os.path.join(settings.BASE_DIR, 'media', 'avatars', username)):
-            os.makedirs(os.path.join(settings.BASE_DIR, 'media', 'avatars', username))
-        avatar_url = os.path.join('media', 'avatars', username, 'avatar.png')
-        cv2.imwrite(os.path.join(settings.BASE_DIR, avatar_url), avatar)
-        # cv2.imshow('1', avatar)
-        # cv2.waitKey()
 
         # 校验邮箱格式
         try:
@@ -186,8 +182,18 @@ class Register(APIView):
         else:
             return HttpResponse('该邮箱还没获取验证码', status=403)
 
-        user = User.objects.create_user(username, password, email, mobile, birthday, website, avatar_url)
+        user = User.objects.create_user(username, password, email, mobile, birthday, website, '')
         user.is_active = 1
+        user.save()
+
+        userid = user.id
+        if not os.path.exists(os.path.join(settings.BASE_DIR, 'media', 'avatars', str(userid))):
+            os.makedirs(os.path.join(settings.BASE_DIR, 'media', 'avatars', str(userid)))
+        avatar_url = os.path.join('media', 'avatars', str(userid), 'avatar.png')
+        cv2.imwrite(os.path.join(settings.BASE_DIR, avatar_url), avatar)
+
+        user = User.objects.get(id=userid)
+        user.avatar = '/api/' + avatar_url
         user.save()
         return HttpResponse('注册成功')
 
@@ -347,8 +353,9 @@ class UploadAvatar(APIView):
 
     def post(self, request):
         username = request.user.username
+        userid = request.user.id
         try:
-            user = User.objects.get(Q(username=username))
+            user = User.objects.get(Q(id=userid))
         except User.DoesNotExist:
             return HttpResponse('用户不存在', status=403)
         if user:
@@ -359,10 +366,12 @@ class UploadAvatar(APIView):
         avatar_data = base64.b64decode(avatar_b64)
         avatar_array = np.fromstring(avatar_data, np.uint8)
         avatar = cv2.imdecode(avatar_array, cv2.COLOR_RGB2BGR)
-        if not os.path.exists(os.path.join(settings.BASE_DIR, 'media', 'avatars', username)):
-            os.makedirs(os.path.join(settings.BASE_DIR, 'media', 'avatars', username))
-        avatar_url = os.path.join('media', 'avatars', username, 'avatar.png')
+        if not os.path.exists(os.path.join(settings.BASE_DIR, 'media', 'avatars', str(userid))):
+            os.makedirs(os.path.join(settings.BASE_DIR, 'media', 'avatars', str(userid)))
+        avatar_url = os.path.join('media', 'avatars', str(userid), 'avatar.png')
         cv2.imwrite(os.path.join(settings.BASE_DIR, avatar_url), avatar)
+        user.avatar = '/api/' + avatar_url
+        user.save()
         return HttpResponse('修改成功')
 
 
@@ -411,6 +420,17 @@ class GetWebAccess(APIView):
         for user in users:
             data.append({'username': user.username,
                          'signature': user.signature,
+                         'avatar': user.avatar,
                          'link': user.website,
                          'image': user.website_img})
         return JsonResponse({'data': data})
+
+
+class GetNameAndId(APIView):
+    """获得用户名和id"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        userid = request.user.id
+        username = request.user.username
+        return JsonResponse({'id': userid, 'username': username})

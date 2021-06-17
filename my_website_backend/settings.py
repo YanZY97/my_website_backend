@@ -9,12 +9,17 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
+import configparser
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+config_file = os.path.join(BASE_DIR, 'my_website_backend', 'config.ini')
+conf = configparser.ConfigParser()
+conf.read(config_file, encoding='utf-8')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -115,9 +120,9 @@ WSGI_APPLICATION = 'my_website_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysite',
-        'USER': 'root',
-        'PASSWORD': '123456',
+        'NAME': conf.get('settings', 'db_name'),
+        'USER': conf.get('settings', 'db_user'),
+        'PASSWORD': conf.get('settings', 'db_password'),
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -160,8 +165,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # 邮件设置
-MAIL_FROM_ADDR = '1835752347@qq.com'
-MAIL_PASSWORD = 'yksxrkfmldojdadb'
+MAIL_FROM_ADDR = conf.get('settings', 'mail_from_addr')
+MAIL_PASSWORD = conf.get('settings', 'mail_password')
 MAIL_SMTP_SERVER = 'smtp.qq.com'
 MAIL_EXPIRE = 60*10
 MAIL_INTERVAL = 60
