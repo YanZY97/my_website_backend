@@ -9,4 +9,5 @@ urlpatterns = [
     path('getannouncement/', views.GetAnnouncement.as_view()),
     path('getannouncementcount/', views.GetAnnouncementCount.as_view()),
     path('uploadaction/', views.UploadAction.as_view()),
+    path('echochat/', views.EchoChat.as_view()),
 ]

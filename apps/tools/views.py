@@ -1,3 +1,5 @@
+import django.http
+import re
 from rest_framework.permissions import IsAdminUser
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
@@ -72,9 +74,35 @@ class GetAnnouncement(APIView):
         return JsonResponse({"data": announcements_list})
 
 
+class EchoChat(APIView):
+    def get(self, request):
+        command = str(request.query_params['command'])
+        return HttpResponse(gen_response(command))
+
+
 class UploadAction(APIView):
     def get(self, request):
         return HttpResponse(status=200)
 
     def post(self, request):
         return HttpResponse(status=200)
+
+
+def gen_response(command: str):
+    """
+    创建回复内容
+    :param command:
+    :return:
+    """
+    if command.startswith('ping '):
+        return "<div style='padding: 8px 10px 10px'>pong {}</div>".format(command[5:])
+    elif re.match(r'^list (\d+) items$', command):
+        response = ''
+        num = int(command.split(' ')[1])
+        for i in range(num):
+            response += ("<li>item {}</li>".format(str(i + 1)))
+        return "<div style='padding: 8px 10px 10px'><h4>list：<ul>{}</ul></h4></div>".format(response)
+    elif command == 'image':
+        return "<img style='width: 100%' src='/api/media/echo_chat.png'>"
+    else:
+        return "<div style='padding: 8px 10px 10px'>I don't understand {}</div>".format(command)

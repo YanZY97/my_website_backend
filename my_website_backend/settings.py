@@ -30,14 +30,19 @@ SECRET_KEY = ')irlq3!ahcw-qk+oir**9u_rx6bsm)zr5@7+@mcqy*n*jcx%3_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    's2.z100.vip',
+    'localhost',
+    'www.violety.cn',
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'rest_framework',
     'corsheaders',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,14 +63,25 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS 跨域请求配置
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
+# # CORS 跨域请求配置
+CORS_ALLOWED_ORIGINS = [
+    "https://www.violety.cn",
+    "http://127.0.0.1",
+    "http://localhost"
+]
+CSRF_TRUSTED_ORIGINS = [
+    'violety.cn',
+    '127.0.0.1',
+    'localhost',
+]
+CORS_ALLOW_CREDENTIALS = False
+# CORS_ORIGIN_ALLOW_ALL = True
 CORS_REPLACE_HTTPS_REFERER = True
 CORS_ALLOW_METHODS = [
     'DELETE',

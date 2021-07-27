@@ -15,8 +15,12 @@ class PostMessage(APIView):
     def post(self, request):
         images = request.data.get('images')
         message_model = Messages()
-        user = User.objects.get(username=request.data.get('user'))
-        message_model.user = user.id
+        try:
+            user = User.objects.get(username=request.data.get('user'))
+            message_model.user = user.id
+        except:
+            message_model.user = 0
+
         message_model.content = request.data.get('data')
         message_model.save()
         message_id = message_model.id
